@@ -26,7 +26,7 @@ public class Base32Test {
 		int i, len;
 		
 		
-		for (i = 0; i < 2; i ++) {
+		for (i = 0; i < 2048; i ++) {
 			len = r.nextInt(2048) + 1;
 			byte[] buf = randomBytes(len);
 			String st = Util.base32Encode(buf);

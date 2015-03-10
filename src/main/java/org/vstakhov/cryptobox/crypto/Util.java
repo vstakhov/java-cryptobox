@@ -39,43 +39,45 @@ public class Util {
 	
 	public static String base32Encode(byte[] in)
 	{
-		int remain = -1, x;
+		int remain = -1, x, t;
 		int i;
 		int inlen = in.length;
 		int allocated_len = inlen * 8 / 5 + 2;
 		StringBuilder out = new StringBuilder(allocated_len);
 
 		for (i = 0; i < inlen; i++) {
+			t = in[i] & 0xFF;
 			switch (i % 5) {
 			case 0:
 				/* 8 bits of input and 3 to remain */
-				x = in[i];
-				remain = in[i] >> 5;
+				x = t;
+				remain = t >> 5;
 				out.append(b32[x & 0x1F]);
 				break;
 			case 1:
 				/* 11 bits of input, 1 to remain */
-				x = remain | (in[i] << 3);
+				x = remain | (t << 3);
 				out.append(b32[x & 0x1F]);
 				out.append(b32[(x >> 5) & 0x1F]);
 				remain = x >> 10;
 				break;
 			case 2:
 				/* 9 bits of input, 4 to remain */
-				x = remain | (in[i] << 1);
+				x = remain | (t << 1);
 				out.append(b32[x & 0x1F]);
 				remain = x >> 5;
 				break;
 			case 3:
 				/* 12 bits of input, 2 to remain */
-				x = remain | (in[i] << 4);
+				
+				x = remain | (t << 4);
 				out.append(b32[x & 0x1F]);
 				out.append(b32[(x >> 5) & 0x1F]);
 				remain = (x >> 10) & 0x3;
 				break;
 			case 4:
 				/* 10 bits of output, nothing to remain */
-				x = remain | (in[i] << 2);
+				x = remain | (t << 2);
 				out.append(b32[x & 0x1F]);
 				out.append(b32[(x >> 5) & 0x1F]);
 				remain = -1;
