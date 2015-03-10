@@ -133,7 +133,7 @@ public class Util {
 		char c;
 		int acc = 0;
 		int processed_bits = 0;
-		int i, allocated_len = in.length() / 8 * 5 + 2;
+		int i, allocated_len = in.length() * 5 / 8 + 2;
 		ByteBuffer res = ByteBuffer.allocate(allocated_len);
 
 
