@@ -26,7 +26,7 @@ package org.vstakhov.cryptobox.crypto;
 import static org.vstakhov.cryptobox.Cryptobox.library;
 
 public class Random {
-	public byte[] randomBytes(int n) {
+	public static byte[] randomBytes(int n) {
 		byte[] buffer = new byte[n];
 		
 		library().rspamd_randombytes(buffer, n);

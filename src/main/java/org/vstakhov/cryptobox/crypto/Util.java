@@ -23,7 +23,7 @@
  */
 package org.vstakhov.cryptobox.crypto;
 
-import java.nio.ByteBuffer;
+import java.io.ByteArrayOutputStream;
 
 public class Util {
 	
@@ -55,29 +55,29 @@ public class Util {
 				break;
 			case 1:
 				/* 11 bits of input, 1 to remain */
-				x = remain | in[i] << 3;
+				x = remain | (in[i] << 3);
 				out.append(b32[x & 0x1F]);
-				out.append(b32[x >> 5 & 0x1F]);
+				out.append(b32[(x >> 5) & 0x1F]);
 				remain = x >> 10;
 				break;
 			case 2:
 				/* 9 bits of input, 4 to remain */
-				x = remain | in[i] << 1;
+				x = remain | (in[i] << 1);
 				out.append(b32[x & 0x1F]);
 				remain = x >> 5;
 				break;
 			case 3:
 				/* 12 bits of input, 2 to remain */
-				x = remain | in[i] << 4;
+				x = remain | (in[i] << 4);
 				out.append(b32[x & 0x1F]);
-				out.append(b32[x >> 5 & 0x1F]);
-				remain = x >> 10 & 0x3;
+				out.append(b32[(x >> 5) & 0x1F]);
+				remain = (x >> 10) & 0x3;
 				break;
 			case 4:
 				/* 10 bits of output, nothing to remain */
-				x = remain | in[i] << 2;
+				x = remain | (in[i] << 2);
 				out.append(b32[x & 0x1F]);
-				out.append(b32[x >> 5 & 0x1F]);
+				out.append(b32[(x >> 5) & 0x1F]);
 				remain = -1;
 				break;
 			default:
@@ -134,7 +134,7 @@ public class Util {
 		int acc = 0;
 		int processed_bits = 0;
 		int i, allocated_len = in.length() * 5 / 8 + 2;
-		ByteBuffer res = ByteBuffer.allocate(allocated_len);
+		ByteArrayOutputStream res = new ByteArrayOutputStream(allocated_len);
 
 
 		for (i = 0; i < in.length(); i ++) {
@@ -142,7 +142,7 @@ public class Util {
 
 			if (processed_bits >= 8) {
 				processed_bits -= 8;
-				res.put((byte)(acc & 0xFF));
+				res.write(acc & 0xFF);
 				acc >>= 8;
 			}
 
@@ -156,9 +156,9 @@ public class Util {
 		}
 
 		if (processed_bits > 0) {
-			res.put((byte)(acc & 0xFF));
+			res.write(acc & 0xFF);
 		}
 		
-		return res.array();
+		return res.toByteArray();
 	}
 }

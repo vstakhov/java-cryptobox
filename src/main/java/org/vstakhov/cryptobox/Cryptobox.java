@@ -103,6 +103,17 @@ public class Cryptobox {
         		@In byte[] publicKey, 
         		@In byte[] privateKey, 
         		@In byte[] sig);
+        
+        public static final int HASH_BYTES = 64;
+        
+        /**
+         * Calculates hash for the input data (currently blake2b hash)
+         * @param buf buffer to calculate checksum
+         * @param size size of buffer
+         * @param out output buffer
+         */
+        public void rspamd_cryptobox_hash (@In byte[] buf, @size_t long size,
+            @Out byte[] out);
     }
 
     public static int init() {

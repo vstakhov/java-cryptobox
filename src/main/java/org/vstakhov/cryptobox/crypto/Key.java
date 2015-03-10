@@ -27,18 +27,25 @@ import static org.vstakhov.cryptobox.crypto.Util.base32Decode;
 import static org.vstakhov.cryptobox.crypto.Util.base32Encode;
 import static org.vstakhov.cryptobox.crypto.Util.checkLength;
 import static org.vstakhov.cryptobox.Cryptobox.CryptoboxLib.PUBLICKEY_BYTES;
+import static org.vstakhov.cryptobox.Cryptobox.CryptoboxLib.HASH_BYTES;
+import static org.vstakhov.cryptobox.Cryptobox.library;
 
 public class Key {
 	private final byte[] data;
+	private final byte[] hash;
 	
 	public Key(byte[] raw) {
 		this.data = raw;
 		checkLength(raw, PUBLICKEY_BYTES);
+		hash = new byte[HASH_BYTES];
+		library().rspamd_cryptobox_hash(data, PUBLICKEY_BYTES, hash);
 	}
 	
 	public Key(String encoded) {
 		this.data = base32Decode(encoded);
 		checkLength(this.data, PUBLICKEY_BYTES);
+		hash = new byte[HASH_BYTES];
+		library().rspamd_cryptobox_hash(data, PUBLICKEY_BYTES, hash);
 	}
 	
 	public byte[] toBytes() {
@@ -47,5 +54,13 @@ public class Key {
 	
 	public String toString() {
 		return base32Encode(this.data);
+	}
+	
+	public String idString() {
+		return base32Encode(this.hash);
+	}
+	
+	public byte[] idBytes() {
+		return hash;
 	}
 }
